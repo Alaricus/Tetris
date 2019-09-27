@@ -1,0 +1,47 @@
+body {
+  text-align: center;
+  background-color: rgb(43, 43, 43);
+  color: #cccccc;
+  font-family: 'Press Start 2P';
+}
+
+.game {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin: 15px 0 0 0;
+}
+
+.info {
+  margin: 0 0 15px 0;
+}
+
+.infoRight {
+  width: 150px;
+  margin: 40px 0 0 20px;
+  padding: 10px;
+  text-align: left;
+}
+
+.infoLeft {
+  width: 128px;
+  margin: 40px 0 0 0;
+  padding: 10px;
+}
+
+.well {
+  border-radius: 0 0 15px 15px;
+  margin: 30px 0 0 0;
+}
+
+.next {
+  margin: 20px 0 0 0;
+}
+
+.over {
+  display: none;
+  position: relative;
+  top: -400px;
+  padding: 15px 0 12px;
+  background-color: rgba(0, 0, 0, 0.75);
+}
