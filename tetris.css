@@ -45,3 +45,9 @@ body {
   padding: 15px 0 12px;
   background-color: rgba(0, 0, 0, 0.75);
 }
+
+.restart {
+  display: none;
+  color: red;
+  cursor: pointer;
+}
