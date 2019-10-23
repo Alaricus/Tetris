@@ -8,6 +8,7 @@
   const well = document.querySelector('.well');
   const ctx = well.getContext('2d');
   const ctxNext = next.getContext('2d');
+  const audio = new Audio('tetris.mp3');
 
   const tetrominoes = [
     [[4, 4], [4, 4]], // O
@@ -202,6 +203,7 @@
 
     if ((data.line >= 1) && (data.line <= 90)) {
       data.level = Math.trunc(1 + ((data.line - 1) / 10));
+      audio.playbackRate = data.level * 0.1 + 1;
     }
     else if (data.line >= 91) {
       data.level = 10;
@@ -221,6 +223,10 @@
       restart.style.display = 'block';
     } else {
       requestAnimationFrame(freeFall);
+    }
+
+    if (audio.currentTime >= 32) {
+      audio.currentTime = 0;
     }
   };
 
@@ -242,7 +248,13 @@
       before: Date.now(),
       now: null,
       delay: 500,
+      music: true,
     };
+
+    // audio.loop = true;
+    audio.playbackRate = 1;
+    audio.play();
+
     over.style.display = 'none';
     restart.style.display = 'none';
     score.textContent = data.score;
@@ -264,6 +276,12 @@
     e.code === 'ArrowLeft' && !data.over && canMove('left') && move('left');
     e.code === 'ArrowRight' && !data.over && canMove('right') && move('right');
     e.code === 'ArrowUp' && !data.over && canMove('rotate') && move();
+
+    if (e.code === 'KeyM') {
+      data.music = !data.music;
+      !data.music && audio.play && audio.pause();
+      data.music && audio.pause && audio.play();
+    }
   });
 
   restart.addEventListener('click', init);
