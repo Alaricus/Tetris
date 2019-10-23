@@ -248,12 +248,10 @@
       before: Date.now(),
       now: null,
       delay: 500,
-      music: true,
+      music: false,
     };
 
-    // audio.loop = true;
     audio.playbackRate = 1;
-    audio.play();
 
     over.style.display = 'none';
     restart.style.display = 'none';
