@@ -3,8 +3,8 @@
   const line = document.querySelector('.line');
   const level = document.querySelector('.level');
   const next = document.querySelector('.next');
-  const over = document.querySelector('.over');
-  const restart = document.querySelector('.restart');
+  const message = document.querySelector('.message');
+  const messageText = document.querySelector('.messageText');
   const well = document.querySelector('.well');
   const ctx = well.getContext('2d');
   const ctxNext = next.getContext('2d');
@@ -32,7 +32,7 @@
     '#black', // stroke
   ];
 
-  let data = {};
+  let data = { over: true };
 
   const renderNext = () => {
     ctxNext.canvas.width = data.size * data.nextTetromino[0].length;
@@ -218,20 +218,24 @@
       data.before = data.now;
       canMove('down') && move('down');
     }
-    if (data.over) {
-      over.style.display = 'block';
-      restart.style.display = 'block';
-    } else {
-      requestAnimationFrame(freeFall);
-    }
 
     if (audio.currentTime >= 32) {
       audio.currentTime = 0;
+    }
+
+    if (data.over) {
+      message.style.visibility = 'visible';
+      messageText.style.display = 'block';
+      audio.pause();
+      audio.currentTime = 0;
+    } else {
+      requestAnimationFrame(freeFall);
     }
   };
 
   const init = () => {
     data = {
+      ...data,
       size: 32,
       score: 0,
       line: 0,
@@ -239,7 +243,6 @@
       oldCoords: null,
       newCoords: null,
       pos: { x: 3, y: -2 },
-      over: false,
       well: Array(20).fill(0).map(item => Array(10).fill(0)),
       tetromino: null,
       index: null,
@@ -248,23 +251,23 @@
       before: Date.now(),
       now: null,
       delay: 500,
-      music: false,
+      music: localStorage.getItem('music') !== 'false',
     };
 
     audio.playbackRate = 1;
 
-    over.style.display = 'none';
-    restart.style.display = 'none';
     score.textContent = data.score;
     line.textContent = data.line;
     level.textContent = data.level;
     setNewTetromino();
     ctx.canvas.width = data.size * 10;
     ctx.canvas.height = data.size * 20;
-    requestAnimationFrame(freeFall);
+    renderWell();
+    !data.over && requestAnimationFrame(freeFall);
   };
 
   window.addEventListener('keydown', (e) => {
+    e.preventDefault();
     if (e.code === 'Space') {
       while(canMove('down')) {
         move('down');
@@ -275,14 +278,20 @@
     e.code === 'ArrowRight' && !data.over && canMove('right') && move('right');
     e.code === 'ArrowUp' && !data.over && canMove('rotate') && move();
 
+    if (e.code === 'KeyS' && data.over) {
+      message.style.visibility = 'hidden';
+      data.over = false;
+      data.music && audio.play();
+      init();
+    }
+
     if (e.code === 'KeyM') {
+      data.music && audio.play && audio.pause();
+      !data.music && audio.pause && audio.play();
       data.music = !data.music;
-      !data.music && audio.play && audio.pause();
-      data.music && audio.pause && audio.play();
+      localStorage.setItem('music', data.music);
     }
   });
-
-  restart.addEventListener('click', init);
 
   init();
 })();
